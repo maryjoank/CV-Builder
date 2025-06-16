@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume/CV Builder</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-purple: #d1c4e9;
+            --dark-purple: #7e57c2;
+            --black: #212121;
+            --accent-teal: #26a69a;
+            --accent-coral: #ff7043;
+            --accent-yellow: #ffca28;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--primary-purple), var(--white));
+            color: var(--black);
+            min-height: 100vh;
+        }
+
+        .container {
+            background: var(--white);
+            border-radius: 15px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: var(--dark-purple);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-section, .resume-preview {
+            background: var(--white);
+            border: 2px solid var(--primary-purple);
+            border-radius: 12px;
+            padding: 30px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .form-section:hover, .resume-preview:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(126, 87, 194, 0.2);
+        }
+
+        .section-title {
+            color: var(--dark-purple);
+            font-weight: 600;
+            font-size: 1.5rem;
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            width: 50px;
+            height: 3px;
+            background: var(--accent-teal);
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            transition: width 0.3s ease;
+        }
+
+        .section-title:hover::after {
+            width: 100px;
+        }
+
+        .preview-section h4 {
+            color: var(--dark-purple);
+            font-weight: 500;
+            border-bottom: 2px solid var(--accent-teal);
+            padding-bottom: 8px;
+            margin-bottom: 15px;
+        }
+
+        .form-control {
+            border: 1px solid var(--primary-purple);
+            border-radius: 8px;
+            padding: 10px;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: var(--dark-purple);
+            box-shadow: 0 0 8px rgba(126, 87, 194, 0.3);
+            outline: none;
+        }
+
+        .btn-add {
+            background: var(--accent-teal);
+            color: var(--white);
+            border: none;
+            border-radius: 25px;
+            padding: 8px 20px;
+            font-weight: 500;
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+
+        .btn-add:hover {
+            background: var(--accent-coral);
+            transform: scale(1.05);
+        }
+
+        .btn-primary {
+            background: var(--dark-purple);
+            border: none;
+            border-radius: 25px;
+            padding: 10px 30px;
+            font-weight: 500;
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-yellow);
+            color: var(--black);
+            transform: scale(1.05);
+        }
+
+        #downloadBtn {
+            background: var(--accent-coral);
+            border: none;
+            border-radius: 25px;
+            padding: 12px 40px;
+            font-weight: 600;
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+
+        #downloadBtn:hover {
+            background: var(--accent-teal);
+            transform: scale(1.05);
+        }
+
+        .preview-section p, .preview-section ul {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: var(--black);
+        }
+
+        .preview-section ul li {
+            margin-bottom: 5px;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--primary-purple);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--dark-purple);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-teal);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            .form-section, .resume-preview {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container my-5">
+        <h1 class="text-center mb-4">Resume/CV Builder</h1>
+        <div class="row">
+            <!-- Form Section -->
+            <div class="col-md-6">
+                <div class="form-section">
+                    <h2 class="section-title">Build Your Resume</h2>
+                    <form id="resumeForm">
+                        <!-- Profile -->
+                        <div class="mb-3">
+                            <h4>Profile</h4>
+                            <textarea class="form-control" id="profile" placeholder="Brief professional summary"></textarea>
+                        </div>
+
+                        <!-- Contact Information -->
+                        <div class="mb-3">
+                            <h4>Contact Information</h4>
+                            <div class="mb-2">
+                                <label for="name" class="form-label">Full Name</label>
+                                <input type="text" class="form-control" id="name" placeholder="John Doe">
+                            </div>
+                            <div class="mb-2">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="email" placeholder="john.doe@example.com">
+                            </div>
+                            <div class="mb-2">
+                                <label for="phone" class="form-label">Phone</label>
+                                <input type="tel" class="form-control" id="phone" placeholder="+1234567890">
+                            </div>
+                            <div class="mb-2">
+                                <label for="address" class="form-label">Address</label>
+                                <input type="text" class="form-control" id="address" placeholder="123 Main St, City, Country">
+                            </div>
+                        </div>
+
+                        <!-- Education -->
+                        <div class="mb-3">
+                            <h4>Education</h4>
+                            <div id="educationEntries">
+                                <div class="education-entry mb-2">
+                                    <input type="text" class="form-control mb-1" placeholder="Degree, e.g., B.Sc. Computer Science">
+                                    <input type="text" class="form-control mb-1" placeholder="Institution">
+                                    <input type="text" class="form-control mb-1" placeholder="Year, e.g., 2018-2022">
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-add btn-sm" onclick="addEducation()">Add Education</button>
+                        </div>
+
+                        <!-- Experience -->
+                        <div class="mb-3">
+                            <h4>Experience</h4>
+                            <div id="experienceEntries">
+                                <div class="experience-entry mb-2">
+                                    <input type="text" class="form-control mb-1" placeholder="Job Title">
+                                    <input type="text" class="form-control mb-1" placeholder="Company">
+                                    <input type="text" class="form-control mb-1" placeholder="Year, e.g., 2022-Present">
+                                    <textarea class="form-control mb-1" placeholder="Description"></textarea>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-add btn-sm" onclick="addExperience()">Add Experience</button>
+                        </div>
+
+                        <!-- Awards/Certificates -->
+                        <div class="mb-3">
+                            <h4>Awards/Certificates</h4>
+                            <div id="awardEntries">
+                                <div class="award-entry mb-2">
+                                    <input type="text" class="form-control mb-1" placeholder="Award/Certificate, e.g., AWS Certified Developer">
+                                    <input type="text" class="form-control mb-1" placeholder="Issuer">
+                                    <input type="text" class="form-control mb-1" placeholder="Year, e.g., 2023">
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-add btn-sm" onclick="addAward()">Add Award/Certificate</button>
+                        </div>
+
+                        <!-- Projects -->
+                        <div class="mb-3">
+                            <h4>Projects</h4>
+                            <div id="projectEntries">
+                                <div class="project-entry mb-2">
+                                    <input type="text" class="form-control mb-1" placeholder="Project Name">
+                                    <textarea class="form-control mb-1" placeholder="Description"></textarea>
+                                    <input type="text" class="form-control mb-1" placeholder="Technologies, e.g., React, Node.js">
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-add btn-sm" onclick="addProject()">Add Project</button>
+                        </div>
+
+                        <!-- Languages -->
+                        <div class="mb-3">
+                            <h4>Languages</h4>
+                            <div id="languageEntries">
+                                <div class="language-entry mb-2">
+                                    <input type="text" class="form-control mb-1" placeholder="Language, e.g., English (Fluent)">
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-add btn-sm" onclick="addLanguage()">Add Language</button>
+                        </div>
+
+                        <!-- Courses -->
+                        <div class="mb-3">
+                            <h4>Courses</h4>
+                            <div id="courseEntries">
+                                <div class="course-entry mb-2">
+                                    <input type="text" class="form-control mb-1" placeholder="Course Name, e.g., Machine Learning">
+                                    <input type="text" class="form-control mb-1" placeholder="Provider, e.g., Coursera">
+                                    <input type="text" class="form-control mb-1" placeholder="Year, e.g., 2023">
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-add btn-sm" onclick="addCourse()">Add Course</button>
+                        </div>
+
+                        <!-- References -->
+                        <div class="mb-3">
+                            <h4>References</h4>
+                            <div id="referenceEntries">
+                                <div class="reference-entry mb-2">
+                                    <input type="text" class="form-control mb-1" placeholder="Name">
+                                    <input type="text" class="form-control mb-1" placeholder="Position">
+                                    <input type="text" class="form-control mb-1" placeholder="Contact Info">
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-add btn-sm" onclick="addReference()">Add Reference</button>
+                        </div>
+
+                        <!-- Skills -->
+                        <div class="mb-3">
+                            <h4>Skills</h4>
+                            <div id="skillEntries">
+                                <div class="skill-entry mb-2">
+                                    <input type="text" class="form-control mb-1" placeholder="Skill, e.g., JavaScript">
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-add btn-sm" onclick="addSkill()">Add Skill</button>
+                        </div>
+
+                        <button type="button" class="btn btn-primary" onclick="updatePreview()">Update Preview</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Preview Section -->
+            <div class="col-md-6">
+                <div class="resume-preview">
+                    <h2 class="section-title">Resume Preview</h2>
+                    <div id="preview">
+                        <div class="preview-section">
+                            <h4>Profile</h4>
+                            <p id="previewProfile"></p>
+                        </div>
+                        <div class="preview-section">
+                            <h4>Contact Information</h4>
+                            <p><strong>Name:</strong> <span id="previewName"></span></p>
+                            <p><strong>Email:</strong> <span id="previewEmail"></span></p>
+                            <p><strong>Phone:</strong> <span id="previewPhone"></span></p>
+                            <p><strong>Address:</strong> <span id="previewAddress"></span></p>
+                        </div>
+                        <div class="preview-section">
+                            <h4>Education</h4>
+                            <div id="previewEducation"></div>
+                        </div>
+                        <div class="preview-section">
+                            <h4>Experience</h4>
+                            <div id="previewExperience"></div>
+                        </div>
+                        <div class="preview-section">
+                            <h4>Awards/Certificates</h4>
+                            <div id="previewAwards"></div>
+                        </div>
+                        <div class="preview-section">
+                            <h4>Projects</h4>
+                            <div id="previewProjects"></div>
+                        </div>
+                        <div class="preview-section">
+                            <h4>Languages</h4>
+                            <div id="previewLanguages"></div>
+                        </div>
+                        <div class="preview-section">
+                            <h4>Courses</h4>
+                            <div id="previewCourses"></div>
+                        </div>
+                        <div class="preview-section">
+                            <h4>References</h4>
+                            <div id="previewReferences"></div>
+                        </div>
+                        <div class="preview-section">
+                            <h4>Skills</h4>
+                            <div id="previewSkills"></div>
+                        </div>
+                    </div>
+                    <button id="downloadBtn" class="btn mt-3">Download as PDF</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- jsPDF for PDF download -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script>
+        // Add entry functions
+        function addEducation() {
+            const entry = document.createElement('div');
+            entry.className = 'education-entry mb-2';
+            entry.innerHTML = `
+                <input type="text" class="form-control mb-1" placeholder="Degree, e.g., B.Sc. Computer Science">
+                <input type="text" class="form-control mb-1" placeholder="Institution">
+                <input type="text" class="form-control mb-1" placeholder="Year, e.g., 2018-2022">
+            `;
+            document.getElementById('educationEntries').appendChild(entry);
+        }
+
+        function addExperience() {
+            const entry = document.createElement('div');
+            entry.className = 'experience-entry mb-2';
+            entry.innerHTML = `
+                <input type="text" class="form-control mb-1" placeholder="Job Title">
+                <input type="text" class="form-control mb-1" placeholder="Company">
+                <input type="text" class="form-control mb-1" placeholder="Year, e.g., 2022-Present">
+                <textarea class="form-control mb-1" placeholder="Description"></textarea>
+            `;
+            document.getElementById('experienceEntries').appendChild(entry);
+        }
+
+        function addAward() {
+            const entry = document.createElement('div');
+            entry.className = 'award-entry mb-2';
+            entry.innerHTML = `
+                <input type="text" class="form-control mb-1" placeholder="Award/Certificate, e.g., AWS Certified Developer">
+                <input type="text" class="form-control mb-1" placeholder="Issuer">
+                <input type="text" class="form-control mb-1" placeholder="Year, e.g., 2023">
+            `;
+            document.getElementById('awardEntries').appendChild(entry);
+        }
+
+        function addProject() {
+            const entry = document.createElement('div');
+            entry.className = 'project-entry mb-2';
+            entry.innerHTML = `
+                <input type="text" class="form-control mb-1" placeholder="Project Name">
+                <textarea class="form-control mb-1" placeholder="Description"></textarea>
+                <input type="text" class="form-control mb-1" placeholder="Technologies, e.g., React, Node.js">
+            `;
+            document.getElementById('projectEntries').appendChild(entry);
+        }
+
+        function addLanguage() {
+            const entry = document.createElement('div');
+            entry.className = 'language-entry mb-2';
+            entry.innerHTML = `
+                <input type="text" class="form-control mb-1" placeholder="Language, e.g., English (Fluent)">
+            `;
+            document.getElementById('languageEntries').appendChild(entry);
+        }
+
+        function addCourse() {
+            const entry = document.createElement('div');
+            entry.className = 'course-entry mb-2';
+            entry.innerHTML = `
+                <input type="text" class="form-control mb-1" placeholder="Course Name, e.g., Machine Learning">
+                <input type="text" class="form-control mb-1" placeholder="Provider, e.g., Coursera">
+                <input type="text" class="form-control mb-1" placeholder="Year, e.g., 2023">
+            `;
+            document.getElementById('courseEntries').appendChild(entry);
+        }
+
+        function addReference() {
+            const entry = document.createElement('div');
+            entry.className = 'reference-entry mb-2';
+            entry.innerHTML = `
+                <input type="text" class="form-control mb-1" placeholder="Name">
+                <input type="text" class="form-control mb-1" placeholder="Position">
+                <input type="text" class="form-control mb-1" placeholder="Contact Info">
+            `;
+            document.getElementById('referenceEntries').appendChild(entry);
+        }
+
+        function addSkill() {
+            const entry = document.createElement('div');
+            entry.className = 'skill-entry mb-2';
+            entry.innerHTML = `
+                <input type="text" class="form-control mb-1" placeholder="Skill, e.g., JavaScript">
+            `;
+            document.getElementById('skillEntries').appendChild(entry);
+        }
+
+        function updatePreview() {
+            // Profile
+            document.getElementById('previewProfile').textContent = document.getElementById('profile').value || 'Not provided';
+
+            // Contact Information
+            document.getElementById('previewName').textContent = document.getElementById('name').value || 'Not provided';
+            document.getElementById('previewEmail').textContent = document.getElementById('email').value || 'Not provided';
+            document.getElementById('previewPhone').textContent = document.getElementById('phone').value || 'Not provided';
+            document.getElementById('previewAddress').textContent = document.getElementById('address').value || 'Not provided';
+
+            // Education
+            const educationEntries = document.querySelectorAll('.education-entry');
+            let educationHTML = '';
+            educationEntries.forEach(entry => {
+                const inputs = entry.querySelectorAll('input');
+                if (inputs[0].value) {
+                    educationHTML += `<p><strong>${inputs[0].value}</strong>, ${inputs[1].value} (${inputs[2].value})</p>`;
+                }
+            });
+            document.getElementById('previewEducation').innerHTML = educationHTML || '<p>Not provided</p>';
+
+            // Experience
+            const experienceEntries = document.querySelectorAll('.experience-entry');
+            let experienceHTML = '';
+            experienceEntries.forEach(entry => {
+                const inputs = entry.querySelectorAll('input');
+                const textarea = entry.querySelector('textarea');
+                if (inputs[0].value) {
+                    experienceHTML += `
+                        <p><strong>${inputs[0].value}</strong>, ${inputs[1].value} (${inputs[2].value})</p>
+                        <p>${textarea.value}</p>
+                    `;
+                }
+            });
+            document.getElementById('previewExperience').innerHTML = experienceHTML || '<p>Not provided</p>';
+
+            // Awards/Certificates
+            const awardEntries = document.querySelectorAll('.award-entry');
+            let awardHTML = '';
+            awardEntries.forEach(entry => {
+                const inputs = entry.querySelectorAll('input');
+                if (inputs[0].value) {
+                    awardHTML += `<p><strong>${inputs[0].value}</strong>, ${inputs[1].value} (${inputs[2].value})</p>`;
+                }
+            });
+            document.getElementById('previewAwards').innerHTML = awardHTML || '<p>Not provided</p>';
+
+            // Projects
+            const projectEntries = document.querySelectorAll('.project-entry');
+            let projectHTML = '';
+            projectEntries.forEach(entry => {
+                const inputs = entry.querySelectorAll('input');
+                const textarea = entry.querySelector('textarea');
+                if (inputs[0].value) {
+                    projectHTML += `
+                        <p><strong>${inputs[0].value}</strong> (${inputs[1].value})</p>
+                        <p>${textarea.value}</p>
+                    `;
+                }
+            });
+            document.getElementById('previewProjects').innerHTML = projectHTML || '<p>Not provided</p>';
+
+            // Languages
+            const languageEntries = document.querySelectorAll('.language-entry');
+            let languageHTML = '<ul>';
+            languageEntries.forEach(entry => {
+                const input = entry.querySelector('input');
+                if (input.value) {
+                    languageHTML += `<li>${input.value}</li>`;
+                }
+            });
+            languageHTML += '</ul>';
+            document.getElementById('previewLanguages').innerHTML = languageHTML || '<p>Not provided</p>';
+
+            // Courses
+            const courseEntries = document.querySelectorAll('.course-entry');
+            let courseHTML = '';
+            courseEntries.forEach(entry => {
+                const inputs = entry.querySelectorAll('input');
+                if (inputs[0].value) {
+                    courseHTML += `<p><strong>${inputs[0].value}</strong>, ${inputs[1].value} (${inputs[2].value})</p>`;
+                }
+            });
+            document.getElementById('previewCourses').innerHTML = courseHTML || '<p>Not provided</p>';
+
+            // References
+            const referenceEntries = document.querySelectorAll('.reference-entry');
+            let referenceHTML = '';
+            referenceEntries.forEach(entry => {
+                const inputs = entry.querySelectorAll('input');
+                if (inputs[0].value) {
+                    referenceHTML += `<p><strong>${inputs[0].value}</strong>, ${inputs[1].value} (${inputs[2].value})</p>`;
+                }
+            });
+            document.getElementById('previewReferences').innerHTML = referenceHTML || '<p>Not provided</p>';
+
+            // Skills
+            const skillEntries = document.querySelectorAll('.skill-entry');
+            let skillsHTML = '<ul>';
+            skillEntries.forEach(entry => {
+                const input = entry.querySelector('input');
+                if (input.value) {
+                    skillsHTML += `<li>${input.value}</li>`;
+                }
+            });
+            skillsHTML += '</ul>';
+            document.getElementById('previewSkills').innerHTML = skillsHTML || '<p>Not provided</p>';
+        }
+
+        document.getElementById('downloadBtn').addEventListener('click', () => {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            let yOffset = 10;
+
+            // Helper function to add section with text wrapping
+            function addSection(title, content, isList = false) {
+                doc.setFontSize(14);
+                doc.setFont("helvetica", "bold");
+                doc.text(title, 10, yOffset);
+                yOffset += 8;
+                doc.setFontSize(12);
+                doc.setFont("helvetica", "normal");
+                
+                if (isList) {
+                    const items = content.querySelectorAll('li');
+                    items.forEach(item => {
+                        if (yOffset > 280) {
+                            doc.addPage();
+                            yOffset = 10;
+                        }
+                        doc.text(`• ${item.textContent}`, 15, yOffset);
+                        yOffset += 6;
+                    });
+                } else {
+                    const paragraphs = content.querySelectorAll('p');
+                    paragraphs.forEach(p => {
+                        if (yOffset > 280) {
+                            doc.addPage();
+                            yOffset = 10;
+                        }
+                        const lines = doc.splitTextToSize(p.textContent, 190);
+                        doc.text(lines, 10, yOffset);
+                        yOffset += lines.length * 6;
+                    });
+                }
+                yOffset += 5;
+            }
+
+            // Add content to PDF
+            doc.setFontSize(16);
+            doc.setFont("helvetica", "bold");
+            doc.text('Resume', 10, yOffset);
+            yOffset += 10;
+
+            // Profile
+            if (document.getElementById('previewProfile').textContent !== 'Not provided') {
+                const lines = doc.splitTextToSize(document.getElementById('previewProfile').textContent, 190);
+                doc.setFontSize(12);
+                doc.setFont("helvetica", "normal");
+                doc.text(lines, 10, yOffset);
+                yOffset += lines.length * 6 + 10;
+            }
+
+            // Contact Information
+            doc.setFontSize(14);
+            doc.setFont("helvetica", "bold");
+            doc.text('Contact Information', 10, yOffset);
+            yOffset += 8;
+            doc.setFontSize(12);
+            doc.setFont("helvetica", "normal");
+            ['Name', 'Email', 'Phone', 'Address'].forEach(field => {
+                const value = document.getElementById(`preview${field}`).textContent;
+                if (value !== 'Not provided') {
+                    if (yOffset > 280) {
+                        doc.addPage();
+                        yOffset = 10;
+                    }
+                    doc.text(`${field}: ${value}`, 10, yOffset);
+                    yOffset += 6;
+                }
+            });
+            yOffset += 5;
+
+            // Other sections
+            addSection('Education', document.getElementById('previewEducation'));
+            addSection('Experience', document.getElementById('previewExperience'));
+            addSection('Awards/Certificates', document.getElementById('previewAwards'));
+            addSection('Projects', document.getElementById('previewProjects'));
+            addSection('Languages', document.getElementById('previewLanguages'), true);
+            addSection('Courses', document.getElementById('previewCourses'));
+            addSection('References', document.getElementById('previewReferences'));
+            addSection('Skills', document.getElementById('previewSkills'), true);
+
+            doc.save('resume.pdf');
+        });
+    </script>
+</body>
+</html>
